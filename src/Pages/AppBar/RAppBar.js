@@ -14,12 +14,12 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import PersonIcon from '@mui/icons-material/Person';
 import { useNavigate } from 'react-router';
-import { removeFromDb } from '../FakeDB/FakeDB';
+import { addToDb, removeFromDb } from '../FakeDB/FakeDB';
 
 
 
 const drawerWidth = 240;
-const navItems = ['Home', 'About', 'Contact', 'LogOut'];
+const navItems = ['Home', 'Refresh From Server', 'LogOut'];
 
 export default function RAppBar(props) {
     const { window, batchNumber, setBatchNumber } = props;
@@ -33,10 +33,10 @@ export default function RAppBar(props) {
         if (item === 'Home') {
             navigate('/home')
         }
-        else if (item === 'About') {
-
-        } else if (item === 'Contact') {
-
+        else if (item === 'Refresh From Server') {
+            removeFromDb();
+            addToDb({ user: batchNumber });
+            navigate("/")
         } else if (item === 'LogOut') {
             removeFromDb();
             setBatchNumber("");
@@ -90,7 +90,7 @@ export default function RAppBar(props) {
                     {/* this is desktop nav */}
                     <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
                         {navItems.map((item) => (
-                            <Button key={item} sx={{ color: '#fff' }}>
+                            <Button onClick={() => (handleNavButtonClick(item))} key={item} sx={{ color: '#fff' }}>
                                 {item}
                             </Button>
                         ))}

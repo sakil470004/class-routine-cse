@@ -25,7 +25,7 @@ function App() {
             element={
               <>
                 <RAppBar batchNumber={batchNumber} setBatchNumber={setBatchNumber} />
-                <Home batchNumber={batchNumber} />
+                <Home batchNumber={batchNumber} setBatchNumber={setBatchNumber} />
               </>
             }
           />

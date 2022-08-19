@@ -18,7 +18,7 @@ export default function Login({ setBatchNumber }) {
 
     }
     const handleLogin = (e) => {
-        addToDb(localBatchNumber);
+        addToDb({ user: localBatchNumber });
         setBatchNumber(localBatchNumber)
         navigate('/home')
         e.preventDefault();
@@ -29,6 +29,7 @@ export default function Login({ setBatchNumber }) {
             setBatchNumber(currentUser);
             navigate('/home')
         }
+        console.log(getStoredCart())
     }, [])
 
     return <div className='login--container'>

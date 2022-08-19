@@ -4,11 +4,11 @@ const addToDb = id => {
     const exists = getDb();
     let eventUser = {};
     if (!exists) {
-        eventUser['user'] = id;
+        eventUser = { ...id };
     }
     else {
         eventUser = JSON.parse(exists);
-        eventUser['user'] = id;
+        eventUser = { ...eventUser, ...id };
     }
     updateDb(eventUser);
 }
@@ -25,8 +25,8 @@ const removeFromDb = () => {
 
     }
     else {
-        const eventUser = JSON.parse(exists);
-        delete eventUser['user'];
+        let eventUser = JSON.parse(exists);
+        eventUser = {};
         updateDb(eventUser);
     }
 }

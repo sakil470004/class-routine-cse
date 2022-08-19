@@ -8,26 +8,17 @@ import { CircularProgress, Paper, Table, TableBody, TableCell, TableContainer, T
 import './Home.css'
 import classRoutineLogo from './../../assets/classRoutineLogo.jpg'
 import { useNavigate } from 'react-router';
+import { addToDb, getStoredCart } from '../FakeDB/FakeDB';
 
-function Home({ batchNumber }) {
+function Home({ batchNumber, setBatchNumber }) {
     const [data, setData] = useState([]);
     const [expanded, setExpanded] = useState(false);
     const [loading, setLoading] = useState(false);
     let navigate = useNavigate();
-
-    const handleChange =
-        (panel) => (event, isExpanded) => {
-            setExpanded(isExpanded ? panel : false);
-        };
-
-    useEffect(() => {
-        if (batchNumber === '') {
-            navigate('/')
-        }
-    }, [])
-    useEffect(() => {
+    const fetchDataFromServer = () => {
         setLoading(true);
         fetch('https://miu-class-routine.herokuapp.com/getroutine')
+            // fetch('http://localhost:5000/getroutine')
             .then(res => res.json())
             .then(data => {
                 let newDataArray = [];
@@ -110,16 +101,32 @@ function Home({ batchNumber }) {
                 // filter the empty Day
                 newDataArray = newDataArray.filter(element => Object.keys(element).length > 1)
 
-
+                addToDb({ data: newDataArray })
                 setData(newDataArray)
                 setLoading(false);
             });
-        // setLoading(false);
+    }
+    const handleChange =
+        (panel) => (event, isExpanded) => {
+            setExpanded(isExpanded ? panel : false);
+        };
+
+    useEffect(() => {
+        const localBatchNumber = getStoredCart().user;
+        if (localBatchNumber && getStoredCart().data) {
+            setData(getStoredCart().data);
+        } else if (localBatchNumber) {
+            setBatchNumber(localBatchNumber);
+            fetchDataFromServer()
+        } else {
+            navigate("/")
+        }
     }, [])
+
     // console.log('new ', data[2])
     return (
-        loading ? <div style={{ marginTop: '45%' }}><CircularProgress /> </div> :
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
+        loading ? <div style={{ marginTop: '8rem' }}><CircularProgress /> </div> :
+            <div style={{ marginTop: '1rem' }}>
                 <div >
                     {data.map(dtObj => {
                         return (
@@ -186,7 +193,7 @@ function Home({ batchNumber }) {
                         )
                     })
                     }
-                    {!expanded && <img src={classRoutineLogo} />}
+                    {!expanded && <img alt="rutine" src={classRoutineLogo} />}
                 </div> </div>
     );
 }
