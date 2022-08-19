@@ -27,7 +27,7 @@ function Home({ batchNumber }) {
     }, [])
     useEffect(() => {
         setLoading(true);
-        fetch('http://localhost:5000/getroutine')
+        fetch('https://miu-class-routine.herokuapp.com/getroutine')
             .then(res => res.json())
             .then(data => {
                 let newDataArray = [];
