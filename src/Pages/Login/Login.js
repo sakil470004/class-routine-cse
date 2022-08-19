@@ -28,6 +28,7 @@ export default function Login({ setBatchNumber }) {
         if (currentUser) {
             setBatchNumber(currentUser);
             navigate('/home')
+            window.close()
         }
         console.log(getStoredCart())
     }, [])
