@@ -21,6 +21,7 @@ export default function Login({ setBatchNumber }) {
         addToDb({ user: localBatchNumber });
         setBatchNumber(localBatchNumber)
         navigate('/home')
+        window.close()
         e.preventDefault();
     }
     useEffect(() => {
