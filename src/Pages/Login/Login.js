@@ -24,15 +24,15 @@ export default function Login({ setBatchNumber }) {
         window.close()
         e.preventDefault();
     }
-    useEffect(() => {
-        const currentUser = getStoredCart().user;
-        if (currentUser) {
-            setBatchNumber(currentUser);
-            navigate('/home')
-            window.close()
-        }
-        console.log(getStoredCart())
-    }, [])
+    // useEffect(() => {
+    //     // const currentUser = getStoredCart().user;
+    //     // if (currentUser) {
+    //     //     setBatchNumber(currentUser);
+    //     //     navigate('/home')
+    //     //     window.close()
+    //     // }
+
+    // }, [])
 
     return <div className='login--container'>
         {loading ? <h1 style={{ color: 'white' }}>Loading ...</h1> :
