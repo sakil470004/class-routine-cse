@@ -12,19 +12,38 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import PersonIcon from '@mui/icons-material/Person';
+import { useNavigate } from 'react-router';
+import { removeFromDb } from '../FakeDB/FakeDB';
 
 
 
 const drawerWidth = 240;
-const navItems = ['Home', 'About', 'Contact'];
+const navItems = ['Home', 'About', 'Contact', 'LogOut'];
 
 export default function RAppBar(props) {
-    const { window } = props;
+    const { window, batchNumber, setBatchNumber } = props;
     const [mobileOpen, setMobileOpen] = React.useState(false);
+    let navigate = useNavigate()
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
+    const handleNavButtonClick = (item) => {
+        if (item === 'Home') {
+            navigate('/home')
+        }
+        else if (item === 'About') {
+
+        } else if (item === 'Contact') {
+
+        } else if (item === 'LogOut') {
+            removeFromDb();
+            setBatchNumber("");
+            navigate("/")
+
+        }
+    }
 
     const drawer = (
         <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
@@ -33,8 +52,9 @@ export default function RAppBar(props) {
             </Typography>
             <Divider />
             <List>
+                {/* this is mobile nav */}
                 {navItems.map((item) => (
-                    <ListItem key={item} disablePadding>
+                    <ListItem key={item} disablePadding onClick={() => (handleNavButtonClick(item))}>
                         <ListItemButton sx={{ textAlign: 'center' }}>
                             <ListItemText primary={item} />
                         </ListItemButton>
@@ -58,7 +78,8 @@ export default function RAppBar(props) {
                         sx={{ mr: 2, display: { sm: 'none' } }}
                     >
                         <MenuIcon />
-                    </IconButton>Here is the title
+                    </IconButton>
+                    <PersonIcon />    {batchNumber}
                     <Typography
                         variant="h6"
                         component="div"
@@ -66,6 +87,7 @@ export default function RAppBar(props) {
                     >
                         MIU
                     </Typography>
+                    {/* this is desktop nav */}
                     <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
                         {navItems.map((item) => (
                             <Button key={item} sx={{ color: '#fff' }}>

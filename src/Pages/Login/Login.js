@@ -2,23 +2,33 @@ import { TextField } from '@mui/material';
 import './Login.css'
 import React, { useEffect, useState } from 'react';
 import happyEmoji from './../../assets/happyEmoji.png'
+import { useNavigate } from 'react-router';
+import { addToDb, getStoredCart } from '../FakeDB/FakeDB';
 
-export default function Login() {
+export default function Login({ setBatchNumber }) {
 
-    const [batchNumber, setBatchNumber] = React.useState('')
     const [loading, setLoading] = useState(false)
-
+    let navigate = useNavigate();
+    const [localBatchNumber, setLocalBatchNumber] = useState('');
 
     const handleKeyChange = e => {
         const value = e.target.value;
-        setBatchNumber(value)
+        setLocalBatchNumber(value)
+
 
     }
     const handleLogin = (e) => {
-        alert('click')
+        addToDb(localBatchNumber);
+        setBatchNumber(localBatchNumber)
+        navigate('/home')
+        e.preventDefault();
     }
     useEffect(() => {
-
+        const currentUser = getStoredCart().user;
+        if (currentUser) {
+            setBatchNumber(currentUser);
+            navigate('/home')
+        }
     }, [])
 
     return <div className='login--container'>
@@ -56,5 +66,5 @@ export default function Login() {
 
             </div>
         }
-    </div >
+    </div>
 }

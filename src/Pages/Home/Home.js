@@ -4,20 +4,29 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { CircularProgress, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import './Home.css'
+import classRoutineLogo from './../../assets/classRoutineLogo.jpg'
+import { useNavigate } from 'react-router';
 
-function Home() {
+function Home({ batchNumber }) {
     const [data, setData] = useState([]);
-    const [currentClass, setCurrentClass] = useState('49');
     const [expanded, setExpanded] = useState(false);
+    const [loading, setLoading] = useState(false);
+    let navigate = useNavigate();
 
     const handleChange =
         (panel) => (event, isExpanded) => {
             setExpanded(isExpanded ? panel : false);
         };
 
-
     useEffect(() => {
+        if (batchNumber === '') {
+            navigate('/')
+        }
+    }, [])
+    useEffect(() => {
+        setLoading(true);
         fetch('http://localhost:5000/getroutine')
             .then(res => res.json())
             .then(data => {
@@ -46,7 +55,7 @@ function Home() {
                             currentDay = dtOBJ.Day;
                         }
                         else {
-                            if (value.includes(currentClass)) {
+                            if (value.includes(batchNumber)) {
                                 if (key === "9:00-10:00") {
                                     newDataObJ[key] = `1--${value}--${currentRoom}`;
                                     // newDataObJ[`1--${key}`] = `${value}--${currentRoom}`;
@@ -101,105 +110,84 @@ function Home() {
                 // filter the empty Day
                 newDataArray = newDataArray.filter(element => Object.keys(element).length > 1)
 
-                // let dayObj = {};
-                // currentDay = newDataArray[0].Day;
-                // let currentDayArray = [];
-                // newDataArray.map(NDA => {
-                //   if (NDA.Day === currentDay) {
-                //     cu<rrentDayArray.push(NDA);
-                //   } else {
-                //     // dayObj = { ...dayObj, currentDay: currentDayArray }
-                //     dayObj[currentDay] = currentDayArray;
-                //     currentDay = NDA.Day;
-                //     currentDayArray = [];
-                //     currentDayArray.push(NDA);
-                //   }
-                // })
-                // 
-                // console.log(newDataArray);
-                // console.log(dayObj);
-                // setData(data.data)
-
 
                 setData(newDataArray)
+                setLoading(false);
             });
+        // setLoading(false);
     }, [])
     // console.log('new ', data[2])
     return (
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <div>
-                <h1>This is your home</h1>
-                {
-                    data.map(dtObj => {
-
+        loading ? <div style={{ marginTop: '45%' }}><CircularProgress /> </div> :
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
+                <div >
+                    {data.map(dtObj => {
                         return (
-                            <div >
-                                <Accordion expanded={expanded === dtObj.Day} onChange={handleChange(dtObj.Day)} key={dtObj.Day}>
-                                    <AccordionSummary
-                                        expandIcon={<ExpandMoreIcon />}
-                                        aria-controls="panel4bh-content"
-                                        id="panel4bh-header"
-                                    >
-                                        <Typography sx={{ flexShrink: 0, fontWeight: 'bold', color: 'red' }}>{dtObj.Day}DAY</Typography>
-                                    </AccordionSummary>
-                                    <AccordionDetails>
+                            <Accordion expanded={expanded === dtObj.Day} onChange={handleChange(dtObj.Day)} key={dtObj.Day}>
+                                <AccordionSummary
+                                    expandIcon={<ExpandMoreIcon />}
+                                    aria-controls="panel4bh-content"
+                                    id="panel4bh-header"
+                                >
+                                    <Typography className={expanded === dtObj.Day ? "textCenter" : "titleCssInHOme"}>{dtObj.Day}DAY</Typography>
+                                </AccordionSummary>
+                                <AccordionDetails>
 
-                                        <TableContainer sx={{ maxWidth: '650px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} component={Paper}>
-                                            <Table sx={{}} aria-label="Appointments table">
-                                                <TableHead>
-                                                    <TableRow style={{ backgroundColor: '#95deed' }}>
+                                    <TableContainer sx={{ maxWidth: '650px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} component={Paper}>
+                                        <Table sx={{}} aria-label="Appointments table">
+                                            <TableHead>
+                                                <TableRow style={{ backgroundColor: '#95deed' }}>
 
-                                                        <TableCell >TIME</TableCell>
-                                                        <TableCell >SUBJECT</TableCell>
-                                                        <TableCell >Room</TableCell>
+                                                    <TableCell >TIME</TableCell>
+                                                    <TableCell >SUBJECT</TableCell>
+                                                    <TableCell >Room</TableCell>
 
-                                                    </TableRow>
-                                                </TableHead>
-                                                <TableBody>
-
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody>
 
 
-                                                    {Object.keys(dtObj).map(function (key, index) {
-                                                        const value = dtObj[key];
-                                                        const valuesArray = value.split("--");
+
+                                                {Object.keys(dtObj).map(function (key, index) {
+                                                    const value = dtObj[key];
+                                                    const valuesArray = value.split("--");
 
 
-                                                        return (
-                                                            value.includes(currentClass) &&
-                                                            <TableRow
+                                                    return (
+                                                        value.includes(batchNumber) &&
+                                                        <TableRow
 
-                                                                key={index}
-                                                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                                            >
+                                                            key={index}
+                                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                        >
 
-                                                                <TableCell component="th" scope="row">
-                                                                    {key}
-                                                                </TableCell>
-                                                                <TableCell component="th" scope="row">
-                                                                    {valuesArray[1]}
-                                                                </TableCell>
-                                                                <TableCell component="th" scope="row">
-                                                                    {valuesArray[2]}
-                                                                </TableCell>
+                                                            <TableCell component="th" scope="row">
+                                                                {key}
+                                                            </TableCell>
+                                                            <TableCell component="th" scope="row">
+                                                                {valuesArray[1]}
+                                                            </TableCell>
+                                                            <TableCell component="th" scope="row">
+                                                                {valuesArray[2]}
+                                                            </TableCell>
 
 
-                                                            </TableRow>
-                                                        )
+                                                        </TableRow>
+                                                    )
 
-                                                    })
-                                                    }
-                                                </TableBody>
-                                            </Table>
-                                        </TableContainer>
+                                                })
+                                                }
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>
 
-                                    </AccordionDetails>
-                                </Accordion>
-
-                            </div>)
+                                </AccordionDetails>
+                            </Accordion>
+                        )
                     })
-                }
-            </div>
-        </div>
+                    }
+                    {!expanded && <img src={classRoutineLogo} />}
+                </div> </div>
     );
 }
 

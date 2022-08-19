@@ -1,0 +1,20 @@
+.textCenter {
+    text-align: center;
+    color: #ff9a55;
+    transition: all 0.4s;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.titleCssInHOme {
+    flex-shrink: 0;
+    font-weight: bold;
+    color: red;
+    transition: all 0.4s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
