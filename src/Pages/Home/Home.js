@@ -112,6 +112,7 @@ function Home({ batchNumber, setBatchNumber }) {
         };
 
     useEffect(() => {
+
         const localBatchNumber = getStoredCart().user;
         if (localBatchNumber && getStoredCart().data) {
             setData(getStoredCart().data);

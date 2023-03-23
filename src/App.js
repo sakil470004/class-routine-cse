@@ -8,23 +8,21 @@ import {
   Routes,
   Route,
 } from "react-router-dom"
-import { getStoredCart } from './Pages/FakeDB/FakeDB';
+
 
 
 function App() {
   const [batchNumber, setBatchNumber] = useState('')
 
-  useEffect(() => {
-    const currentUser = getStoredCart().user;
-    setBatchNumber(currentUser);
-  }, [])
+
+
   return (
     <div className="App">
       <BrowserRouter>
 
         <Routes>
-          {!batchNumber && < Route path="/" element={<Login setBatchNumber={setBatchNumber} />}>
-          </Route>}
+          <Route path="/" element={<Login setBatchNumber={setBatchNumber} />}>
+          </Route>
           <Route path="/Home"
             element={
               <>
@@ -37,7 +35,7 @@ function App() {
       </BrowserRouter>
 
 
-    </div >
+    </div>
   );
 }
 
